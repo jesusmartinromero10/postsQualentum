@@ -1,15 +1,19 @@
 import { urls } from "./constant.js";
-import { detail } from "./detalles.js";
+
 
 async function peticionPost (){
 
-    const postsList = await fetch(urls.post)
-    const dataPosts = await postsList.json()
-    console.log(dataPosts)
-    const { posts } = dataPosts
 
     const postsLista = document.querySelector('.posts');
     postsLista.innerHTML= "";
+
+    postsLista.classList.add('loader')
+    const postsList = await fetch(urls.post)
+    const dataPosts = await postsList.json()
+    
+    
+    const { posts } = dataPosts
+
 
     posts.forEach(post => {
         console.log(post)
@@ -39,6 +43,12 @@ async function peticionPost (){
         postDate.classList.add('post-date')
         postDate.textContent=post.date
 
+        const fechaInicial = new Date(post.date); // Fecha de inicio
+        const tiempoTranscurrido = calcularTiempoTranscurrido(fechaInicial);
+
+        const postDetalleFecha= document.createElement('p')
+        postDetalleFecha.textContent=`Tiempo trancurrido es: Años: ${tiempoTranscurrido.anios}, Meses: ${tiempoTranscurrido.meses}, Semanas: ${tiempoTranscurrido.semanas}, Dias: ${tiempoTranscurrido.dias}, Horas: ${tiempoTranscurrido.horas}, Minutos: ${tiempoTranscurrido.minutos}, Segundos: ${tiempoTranscurrido.segundos}`
+
 
         postsLista.appendChild(postArticle)
         postArticle.appendChild(postLink)
@@ -47,6 +57,9 @@ async function peticionPost (){
         postLink.appendChild(postFooter)
         postFooter.appendChild(postContent)
         postFooter.appendChild(postDate)
+        postFooter.appendChild(postDetalleFecha)
+
+        postsLista.classList.remove('loader')
 
         postArticle.addEventListener('click', ()=>{
             const dataIdValue = postArticle.querySelector('.post-link').getAttribute('data-id');
@@ -60,9 +73,9 @@ async function peticionPost (){
             })
             detalle.classList.remove('hidden')
             
-           
+            
             const textoDetalle = fetch(urls[dataIdValue]).then(res=>res.json().then(data=>{
-
+                postsLista.classList.add('loader')
                 const detailSection = document.querySelector('.detail-post')
                 detailSection.innerHTML=''
                 postsList.innerHTML = ''
@@ -94,11 +107,13 @@ async function peticionPost (){
                 detailSection.appendChild(detailParrafo)
                 detailSection.appendChild(detailAutor)
 
-
+                postsLista.classList.remove('loader')
                 detailButton.addEventListener('click', ()=>{
+                    postsLista.classList.add('loader')
                     detalle.classList.add('hidden')
                     todosPosts.forEach(p=>{
                         p.classList.remove('hidden')
+                        postsLista.classList.remove('loader')
         
                     })
                 })
@@ -112,3 +127,38 @@ async function peticionPost (){
 }
 
 peticionPost();
+
+function calcularTiempoTranscurrido(fechaInicial) {
+    const milisegundosPorSegundo = 1000;
+    const milisegundosPorMinuto = milisegundosPorSegundo * 60;
+    const milisegundosPorHora = milisegundosPorMinuto * 60;
+    const milisegundosPorDia = milisegundosPorHora * 24;
+    const milisegundosPorSemana = milisegundosPorDia * 7;
+    const milisegundosPorMes = milisegundosPorDia * 30; // Aproximado, 30 días por mes
+    const milisegundosPorAnio = milisegundosPorDia * 365; // Aproximado, 365 días por año
+
+    const fechaActual = new Date();
+    const milisegundosTranscurridos = fechaActual - fechaInicial;
+
+    const segundos = Math.floor(milisegundosTranscurridos / milisegundosPorSegundo);
+    const minutos = Math.floor(milisegundosTranscurridos / milisegundosPorMinuto);
+    const horas = Math.floor(milisegundosTranscurridos / milisegundosPorHora);
+    const dias = Math.floor(milisegundosTranscurridos / milisegundosPorDia);
+    const semanas = Math.floor(milisegundosTranscurridos / milisegundosPorSemana);
+    const meses = Math.floor(milisegundosTranscurridos / milisegundosPorMes);
+    const anios = Math.floor(milisegundosTranscurridos / milisegundosPorAnio);
+
+    return {
+        segundos,
+        minutos,
+        horas,
+        dias,
+        semanas,
+        meses,
+        anios
+    };
+}
+
+// Ejemplo de uso:
+
+console.log(tiempoTranscurrido.meses);
