@@ -1,133 +1,275 @@
+// import { calcularTiempoTranscurrido } from "./calculoTiempo.js";
+// import { urls } from "./constant.js";
+
+
+// async function peticionPost (){
+
+
+//     const postsLista = document.querySelector('.posts');
+//     postsLista.innerHTML= "";
+
+//     postsLista.classList.add('loader')
+//     const postsList = await fetch(urls.post)
+//     const dataPosts = await postsList.json()
+    
+    
+//     const { posts } = dataPosts
+
+
+//     posts.forEach(post => {
+//         console.log(post)
+
+//         const postArticle = document.createElement('article')
+//         postArticle.classList.add('post')
+
+//         const postLink = document.createElement('a')
+//         postLink.classList.add('post-link')
+//         postLink.setAttribute('data-id', post.id)
+
+//         const postHeader = document.createElement('header')
+//         postHeader.classList.add('post-header')
+
+//         const postTitulo = document.createElement('h3')
+//         postTitulo.classList.add('post-title')
+//         postTitulo.textContent=post.title
+
+//         const postFooter = document.createElement('footer')
+//         postFooter.classList.add('post-footer')
+
+//         const postContent = document.createElement('p')
+//         postContent.classList.add('post-content')
+//         postContent.textContent=post.content
+
+//         const postDate = document.createElement('p')
+//         postDate.classList.add('post-date')
+//         postDate.textContent=post.date
+
+//         const fechaInicial = new Date(post.date); // Fecha de inicio
+//         const tiempoTranscurrido = calcularTiempoTranscurrido(fechaInicial);
+
+//         const postDetalleFecha= document.createElement('p')
+//         postDetalleFecha.textContent=`Tiempo trancurrido es: Años: ${tiempoTranscurrido.anios}, Meses: ${tiempoTranscurrido.meses}, Semanas: ${tiempoTranscurrido.semanas}, Dias: ${tiempoTranscurrido.dias}, Horas: ${tiempoTranscurrido.horas}, Minutos: ${tiempoTranscurrido.minutos}, Segundos: ${tiempoTranscurrido.segundos}`
+
+
+//         postsLista.appendChild(postArticle)
+//         postArticle.appendChild(postLink)
+//         postLink.appendChild(postHeader)
+//         postHeader.appendChild(postTitulo)
+//         postLink.appendChild(postFooter)
+//         postFooter.appendChild(postContent)
+//         postFooter.appendChild(postDate)
+//         postFooter.appendChild(postDetalleFecha)
+
+//         postsLista.classList.remove('loader')
+
+//         postArticle.addEventListener('click', ()=>{
+//             const dataIdValue = postArticle.querySelector('.post-link').getAttribute('data-id');
+//             const todosPosts = document.querySelectorAll('.post')
+//             const detalle = document.querySelector('.detail-post')
+            
+
+//             todosPosts.forEach(p=>{
+//                 p.classList.add('hidden')
+
+//             })
+//             detalle.classList.remove('hidden')
+            
+            
+//             const textoDetalle = fetch(urls[dataIdValue]).then(res=>res.json().then(data=>{
+//                 postsLista.classList.add('loader')
+//                 const detailSection = document.querySelector('.detail-post')
+//                 detailSection.innerHTML=''
+//                 postsList.innerHTML = ''
+                
+//                 const detailHeader = document.createElement('header')
+//                 detailHeader.classList.add('detail-post-header')
+
+//                 const detailButton = document.createElement('button')
+//                 detailButton.classList.add('back-button')
+
+//                 const detailI = document.createElement('i')
+//                 detailI.classList.add('fas', 'fa-arrow-left', 'fa-solid', 'green')
+
+//                 const detailH2 = document.createElement('h2')
+//                 detailH2.textContent= data.title
+
+//                 const detailParrafo = document.createElement('p')
+//                 detailParrafo.classList.add('detail-post-content')
+//                 detailParrafo.textContent=data.content
+
+//                 const detailAutor = document.createElement('p')
+//                 detailAutor.classList.add('detail-post-author')
+//                 detailAutor.textContent=data.author
+
+//                 detailSection.appendChild(detailHeader)
+//                 detailHeader.appendChild(detailButton)
+//                 detailButton.appendChild(detailI)
+//                 detailHeader.appendChild(detailH2)
+//                 detailSection.appendChild(detailParrafo)
+//                 detailSection.appendChild(detailAutor)
+
+//                 postsLista.classList.remove('loader')
+//                 detailButton.addEventListener('click', ()=>{
+//                     postsLista.classList.add('loader')
+//                     detalle.classList.add('hidden')
+//                     todosPosts.forEach(p=>{
+//                         p.classList.remove('hidden')
+//                         postsLista.classList.remove('loader')
+        
+//                     })
+//                 })
+
+
+//             }))
+            
+//         })
+//     });
+    
+// }
+
+// peticionPost();
+
+
+
 import { calcularTiempoTranscurrido } from "./calculoTiempo.js";
 import { urls } from "./constant.js";
 
+async function peticionPost() {
+    try {
+        const postsLista = document.querySelector('.posts');
+        postsLista.innerHTML = "";
+        postsLista.classList.add('loader');
 
-async function peticionPost (){
+        const postsList = await fetch(urls.post);
+        if (!postsList.ok) {
+            throw new Error('Network response was not ok');
+        }
 
+        const dataPosts = await postsList.json();
+        const { posts } = dataPosts;
 
-    const postsLista = document.querySelector('.posts');
-    postsLista.innerHTML= "";
+        posts.forEach(post => {
+            try {
+                const postArticle = document.createElement('article');
+                postArticle.classList.add('post');
 
-    postsLista.classList.add('loader')
-    const postsList = await fetch(urls.post)
-    const dataPosts = await postsList.json()
-    
-    
-    const { posts } = dataPosts
+                const postLink = document.createElement('a');
+                postLink.classList.add('post-link');
+                postLink.setAttribute('data-id', post.id);
 
+                const postHeader = document.createElement('header');
+                postHeader.classList.add('post-header');
 
-    posts.forEach(post => {
-        console.log(post)
+                const postTitulo = document.createElement('h3');
+                postTitulo.classList.add('post-title');
+                postTitulo.textContent = post.title;
 
-        const postArticle = document.createElement('article')
-        postArticle.classList.add('post')
+                const postFooter = document.createElement('footer');
+                postFooter.classList.add('post-footer');
 
-        const postLink = document.createElement('a')
-        postLink.classList.add('post-link')
-        postLink.setAttribute('data-id', post.id)
+                const postContent = document.createElement('p');
+                postContent.classList.add('post-content');
+                postContent.textContent = post.content;
 
-        const postHeader = document.createElement('header')
-        postHeader.classList.add('post-header')
+                const postDate = document.createElement('p');
+                postDate.classList.add('post-date');
+                postDate.textContent = post.date;
 
-        const postTitulo = document.createElement('h3')
-        postTitulo.classList.add('post-title')
-        postTitulo.textContent=post.title
+                const fechaInicial = new Date(post.date);
+                const tiempoTranscurrido = calcularTiempoTranscurrido(fechaInicial);
 
-        const postFooter = document.createElement('footer')
-        postFooter.classList.add('post-footer')
+                const postDetalleFecha = document.createElement('p');
+                postDetalleFecha.textContent = `Tiempo transcurrido es: Años: ${tiempoTranscurrido.anios}, Meses: ${tiempoTranscurrido.meses}, Semanas: ${tiempoTranscurrido.semanas}, Días: ${tiempoTranscurrido.dias}, Horas: ${tiempoTranscurrido.horas}, Minutos: ${tiempoTranscurrido.minutos}, Segundos: ${tiempoTranscurrido.segundos}`;
 
-        const postContent = document.createElement('p')
-        postContent.classList.add('post-content')
-        postContent.textContent=post.content
+                postsLista.appendChild(postArticle);
+                postArticle.appendChild(postLink);
+                postLink.appendChild(postHeader);
+                postHeader.appendChild(postTitulo);
+                postLink.appendChild(postFooter);
+                postFooter.appendChild(postContent);
+                postFooter.appendChild(postDate);
+                postFooter.appendChild(postDetalleFecha);
 
-        const postDate = document.createElement('p')
-        postDate.classList.add('post-date')
-        postDate.textContent=post.date
+                postsLista.classList.remove('loader');
 
-        const fechaInicial = new Date(post.date); // Fecha de inicio
-        const tiempoTranscurrido = calcularTiempoTranscurrido(fechaInicial);
+                postArticle.addEventListener('click', () => {
+                    try {
+                        const dataIdValue = postArticle.querySelector('.post-link').getAttribute('data-id');
+                        const todosPosts = document.querySelectorAll('.post');
+                        const detalle = document.querySelector('.detail-post');
 
-        const postDetalleFecha= document.createElement('p')
-        postDetalleFecha.textContent=`Tiempo trancurrido es: Años: ${tiempoTranscurrido.anios}, Meses: ${tiempoTranscurrido.meses}, Semanas: ${tiempoTranscurrido.semanas}, Dias: ${tiempoTranscurrido.dias}, Horas: ${tiempoTranscurrido.horas}, Minutos: ${tiempoTranscurrido.minutos}, Segundos: ${tiempoTranscurrido.segundos}`
+                        todosPosts.forEach(p => {
+                            p.classList.add('hidden');
+                        });
 
+                        detalle.classList.remove('hidden');
 
-        postsLista.appendChild(postArticle)
-        postArticle.appendChild(postLink)
-        postLink.appendChild(postHeader)
-        postHeader.appendChild(postTitulo)
-        postLink.appendChild(postFooter)
-        postFooter.appendChild(postContent)
-        postFooter.appendChild(postDate)
-        postFooter.appendChild(postDetalleFecha)
+                        const textoDetalle = fetch(urls[dataIdValue]).then(res => {
+                            if (!res.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return res.json();
+                        }).then(data => {
+                            try {
+                                postsLista.classList.add('loader');
+                                const detailSection = document.querySelector('.detail-post');
+                                detailSection.innerHTML = '';
+                                postsList.innerHTML = '';
 
-        postsLista.classList.remove('loader')
+                                const detailHeader = document.createElement('header');
+                                detailHeader.classList.add('detail-post-header');
 
-        postArticle.addEventListener('click', ()=>{
-            const dataIdValue = postArticle.querySelector('.post-link').getAttribute('data-id');
-            const todosPosts = document.querySelectorAll('.post')
-            const detalle = document.querySelector('.detail-post')
-            
+                                const detailButton = document.createElement('button');
+                                detailButton.classList.add('back-button');
 
-            todosPosts.forEach(p=>{
-                p.classList.add('hidden')
+                                const detailI = document.createElement('i');
+                                detailI.classList.add('fas', 'fa-arrow-left', 'fa-solid', 'green');
 
-            })
-            detalle.classList.remove('hidden')
-            
-            
-            const textoDetalle = fetch(urls[dataIdValue]).then(res=>res.json().then(data=>{
-                postsLista.classList.add('loader')
-                const detailSection = document.querySelector('.detail-post')
-                detailSection.innerHTML=''
-                postsList.innerHTML = ''
-                
-                const detailHeader = document.createElement('header')
-                detailHeader.classList.add('detail-post-header')
+                                const detailH2 = document.createElement('h2');
+                                detailH2.textContent = data.title;
 
-                const detailButton = document.createElement('button')
-                detailButton.classList.add('back-button')
+                                const detailParrafo = document.createElement('p');
+                                detailParrafo.classList.add('detail-post-content');
+                                detailParrafo.textContent = data.content;
 
-                const detailI = document.createElement('i')
-                detailI.classList.add('fas', 'fa-arrow-left', 'fa-solid', 'green')
+                                const detailAutor = document.createElement('p');
+                                detailAutor.classList.add('detail-post-author');
+                                detailAutor.textContent = data.author;
 
-                const detailH2 = document.createElement('h2')
-                detailH2.textContent= data.title
+                                detailSection.appendChild(detailHeader);
+                                detailHeader.appendChild(detailButton);
+                                detailButton.appendChild(detailI);
+                                detailHeader.appendChild(detailH2);
+                                detailSection.appendChild(detailParrafo);
+                                detailSection.appendChild(detailAutor);
 
-                const detailParrafo = document.createElement('p')
-                detailParrafo.classList.add('detail-post-content')
-                detailParrafo.textContent=data.content
+                                postsLista.classList.remove('loader');
 
-                const detailAutor = document.createElement('p')
-                detailAutor.classList.add('detail-post-author')
-                detailAutor.textContent=data.author
-
-                detailSection.appendChild(detailHeader)
-                detailHeader.appendChild(detailButton)
-                detailButton.appendChild(detailI)
-                detailHeader.appendChild(detailH2)
-                detailSection.appendChild(detailParrafo)
-                detailSection.appendChild(detailAutor)
-
-                postsLista.classList.remove('loader')
-                detailButton.addEventListener('click', ()=>{
-                    postsLista.classList.add('loader')
-                    detalle.classList.add('hidden')
-                    todosPosts.forEach(p=>{
-                        p.classList.remove('hidden')
-                        postsLista.classList.remove('loader')
-        
-                    })
-                })
-
-
-            }))
-            
-        })
-    });
-    
+                                detailButton.addEventListener('click', () => {
+                                    postsLista.classList.add('loader');
+                                    detalle.classList.add('hidden');
+                                    todosPosts.forEach(p => {
+                                        p.classList.remove('hidden');
+                                        postsLista.classList.remove('loader');
+                                    });
+                                });
+                            } catch (error) {
+                                console.error('Error processing details:', error);
+                            }
+                        }).catch(error => {
+                            console.error('Error fetching data:', error);
+                        });
+                    } catch (error) {
+                        console.error('Error processing detail article click:', error);
+                    }
+                });
+            } catch (error) {
+                console.error('Error processing post:', error);
+            }
+        });
+    } catch (error) {
+        console.error('Error processing posts:', error);
+    }
 }
 
-peticionPost();
-
-
-
+peticionPost()
