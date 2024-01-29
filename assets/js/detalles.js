@@ -1,134 +1,45 @@
-// import { urls } from "./constant.js";
+export function createDetail (data, postsLista, postsList, detalle, todosPosts){
+    postsLista.classList.add('loader');
+    const detailSection = document.querySelector('.detail-post');
+    detailSection.innerHTML = '';
+    postsList.innerHTML = '';
 
+    const detailHeader = document.createElement('header');
+    detailHeader.classList.add('detail-post-header');
 
-// export function detalles(postArticle, postsList){
-//             const dataIdValue = postArticle.querySelector('.post-link').getAttribute('data-id');
-//             const todosPosts = document.querySelectorAll('.post')
-//             const detalle = document.querySelector('.detail-post')
-            
-            
+    const detailButton = document.createElement('button');
+    detailButton.classList.add('back-button');
 
-//             todosPosts.forEach(p=>{
-//                 p.classList.add('hidden')
+    const detailI = document.createElement('i');
+    detailI.classList.add('fas', 'fa-arrow-left', 'fa-solid', 'green');
 
-//             })
-//             detalle.classList.remove('hidden')
-            
-           
-//             const textoDetalle = fetch(urls[dataIdValue]).then(res=>res.json().then(data=>{
+    const detailH2 = document.createElement('h2');
+    detailH2.textContent = data.title;
 
-//                 const detailSection = document.querySelector('.detail-post')
-//                 detailSection.innerHTML=''
-//                 postsList.innerHTML = ''
-                
-//                 const detailHeader = document.createElement('header')
-//                 detailHeader.classList.add('detail-post-header')
+    const detailParrafo = document.createElement('p');
+    detailParrafo.classList.add('detail-post-content');
+    detailParrafo.textContent = data.content;
 
-//                 const detailButton = document.createElement('button')
-//                 detailButton.classList.add('back-button')
+    const detailAutor = document.createElement('p');
+    detailAutor.classList.add('detail-post-author');
+    detailAutor.textContent = data.author;
 
-//                 const detailI = document.createElement('i')
-//                 detailI.classList.add('fas', 'fa-arrow-left', 'fa-solid', 'green')
+    detailSection.appendChild(detailHeader);
+    detailHeader.appendChild(detailButton);
+    detailButton.appendChild(detailI);
+    detailHeader.appendChild(detailH2);
+    detailSection.appendChild(detailParrafo);
+    detailSection.appendChild(detailAutor);
 
-//                 const detailH2 = document.createElement('h2')
-//                 detailH2.textContent= data.title
+    postsLista.classList.remove('loader');
 
-//                 const detailParrafo = document.createElement('p')
-//                 detailParrafo.classList.add('detail-post-content')
-//                 detailParrafo.textContent=data.content
-
-//                 const detailAutor = document.createElement('p')
-//                 detailAutor.classList.add('detail-post-author')
-//                 detailAutor.textContent=data.author
-
-//                 detailSection.appendChild(detailHeader)
-//                 detailHeader.appendChild(detailButton)
-//                 detailButton.appendChild(detailI)
-//                 detailHeader.appendChild(detailH2)
-//                 detailSection.appendChild(detailParrafo)
-//                 detailSection.appendChild(detailAutor)
-
-
-//                 detailButton.addEventListener('click', ()=>{
-//                     detalle.classList.add('hidden')
-//                     todosPosts.forEach(p=>{
-//                         p.classList.remove('hidden')
-        
-//                     })
-//                 })
-
-
-//             }))
-            
-//         }
-
-import { urls } from "./constant.js";
-
-export function detalles(postArticle, postsList) {
-    try {
-        const dataIdValue = postArticle.querySelector('.post-link').getAttribute('data-id');
-        const todosPosts = document.querySelectorAll('.post')
-        const detalle = document.querySelector('.detail-post')
-
+    detailButton.addEventListener('click', () => {
+        postsLista.classList.add('loader');
+        detalle.classList.add('hidden');
         todosPosts.forEach(p => {
-            p.classList.add('hidden')
-        })
-        detalle.classList.remove('hidden')
-
-        const textoDetalle = fetch(urls[dataIdValue])
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return res.json();
-            })
-            .then(data => {
-                try {
-                    const detailSection = document.querySelector('.detail-post')
-                    detailSection.innerHTML = ''
-
-                    const detailHeader = document.createElement('header')
-                    detailHeader.classList.add('detail-post-header')
-
-                    const detailButton = document.createElement('button')
-                    detailButton.classList.add('back-button')
-
-                    const detailI = document.createElement('i')
-                    detailI.classList.add('fas', 'fa-arrow-left', 'fa-solid', 'green')
-
-                    const detailH2 = document.createElement('h2')
-                    detailH2.textContent = data.title
-
-                    const detailParrafo = document.createElement('p')
-                    detailParrafo.classList.add('detail-post-content')
-                    detailParrafo.textContent = data.content
-
-                    const detailAutor = document.createElement('p')
-                    detailAutor.classList.add('detail-post-author')
-                    detailAutor.textContent = data.author
-
-                    detailSection.appendChild(detailHeader)
-                    detailHeader.appendChild(detailButton)
-                    detailButton.appendChild(detailI)
-                    detailHeader.appendChild(detailH2)
-                    detailSection.appendChild(detailParrafo)
-                    detailSection.appendChild(detailAutor)
-
-                    detailButton.addEventListener('click', () => {
-                        detalle.classList.add('hidden')
-                        todosPosts.forEach(p => {
-                            p.classList.remove('hidden')
-                        })
-                    })
-                } catch (error) {
-                    console.error('Error while processing JSON data:', error);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-    } catch (error) {
-        console.error('Error processing details:', error);
-    }
+            p.classList.remove('hidden');
+            postsLista.classList.remove('loader');
+        });
+    });
+    return postsLista
 }
-
